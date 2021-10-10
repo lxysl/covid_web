@@ -6,3 +6,4 @@ pillow
 h5py
 torch
 torchvision
+torchcam
