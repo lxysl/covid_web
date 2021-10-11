@@ -13,8 +13,9 @@ from torchcam.cams import GradCAMpp
 from torchcam.utils import overlay_mask
 
 # Some utilities
+import numpy as np
 import matplotlib.pyplot as plt
-from util import base64_to_pil
+from util import base64_to_pil, pil_to_base64
 
 # Declare a flask app
 app = Flask(__name__)
@@ -84,6 +85,7 @@ def grad_cam(img, model):
     plt.axis('off')
     plt.tight_layout()
     plt.savefig('/Users/lxy/PycharmProjects/mnist_web/overlay.png')
+    return result
 
 
 @app.route('/', methods=['GET'])
@@ -102,13 +104,12 @@ def predict():
         # img.save("./uploads/image.png")
 
         # Make prediction
-        print(img)
-        grad_cam(img, model_cam)
+        cam_img = grad_cam(img, model_cam)
         pred, confidence = model_predict(img, model)
         print(pred, confidence)
 
         # Serialize the result, you can add additional fields
-        return jsonify(result=pred, probability=confidence)
+        return jsonify(result=pred, probability=confidence, img=pil_to_base64(cam_img))
 
     return None
 

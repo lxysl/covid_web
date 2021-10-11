@@ -144,6 +144,7 @@ function displayResult(data) {
   hide(loader);
   predResult.innerHTML = "诊断结果：" + data.result;
   probability.innerHTML = "置信度：" + toPercent(data.probability);
+  displayImage(data.img, "image-display")
   show(predResult);
   show(probability);
 }
