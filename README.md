@@ -1,40 +1,37 @@
-# Deploy Keras Model with Flask as Web App in 10 Minutes
+# 基于CNN的2019-nCov新冠肺炎检测鉴定云平台
 
-[![](https://img.shields.io/badge/python-3.5%2B-green.svg)]()
-[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
-
-> A pretty and customizable web app to deploy your DL model with ease
+- 使用DenseNet网络进行迁移学习，构建新冠肺炎CT影像检测模型。
 
 
-## Getting started in 10 minutes
+- 使用GradCam++算法对类激活图进行可视化，了解神经网络决策依据。
 
-- Clone this repo 
-- Install requirements
-- Run the script
-- Go to http://localhost:5000
-- Done! :tada:
 
-:point_down: Screenshot:
+- 基于 [keras-flask-deploy-webapp](https://github.com/mtobeiyf/keras-flask-deploy-webapp) 的Flask框架部署网络检测平台。
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/5097752/71063354-8caa1d00-213a-11ea-86eb-879238887c1f.png" height="480px" alt="">
-</p>
+![web](./pictures/web.png)
 
-## New Features :fire:
+------------------
 
-- Enhanced, mobile-friendly UI
-- Support image drag-and-drop
-- Use vanilla JavaScript, HTML and CSS. Remove jQuery and Bootstrap
-- Switch to TensorFlow 2.0 and [tf.keras](https://www.tensorflow.org/guide/keras) by default
-- Upgrade Docker base image to Python 3 (it's 2020)
+## Deploy Pytorch Model with Flask as Web App
 
-<p float="left">
-  <img src="https://user-images.githubusercontent.com/5097752/71065048-61c1c800-213e-11ea-92f1-274cbe4734ba.png" height="330px" alt="">
-  <img src="https://user-images.githubusercontent.com/5097752/71062921-aeef6b00-2139-11ea-8b23-6b9eb1e326ca.png" height="330px" alt="">
-</p>
+```shell
+# 1. First, clone the repo
+$ git clone git@github.com:lxy764139720/covid_web.git
 
-_If you need to use Python 2.x or TensorFlow 1.x, check out the [legacy](https://github.com/mtobeiyf/keras-flask-deploy-webapp/tree/legacy) snapshot_
+$ cd covid_web
 
+# 2. Install Python packages
+$ pip install -r requirements.txt
+
+# please note the torchcam package needs to be installed separately
+# for more details, see https://github.com/frgfm/torch-cam/issues/72#issuecomment-943168322
+$ pip install git+https://github.com/frgfm/torch-cam.git#egg=torchcam
+
+# 3. Run!
+$ python app.py
+```
+
+Open http://localhost:5000 and have fun. :smiley:
 
 ------------------
 
@@ -44,11 +41,11 @@ With **[Docker](https://www.docker.com)**, you can quickly build and run the ent
 
 ```shell
 # 1. First, clone the repo
-$ git clone https://github.com/mtobeiyf/keras-flask-deploy-webapp.git
-$ cd keras-flask-deploy-webapp
+$ git clone git@github.com:lxy764139720/covid_web.git
+$ cd covid_web
 
 # 2. Build Docker image
-$ docker build -t keras_flask_app .
+$ docker build -t covid_web .
 
 # 3. Run!
 $ docker run -it --rm -p 5000:5000 keras_flask_app
@@ -56,101 +53,25 @@ $ docker run -it --rm -p 5000:5000 keras_flask_app
 
 Open http://localhost:5000 and wait till the webpage is loaded.
 
-## Local Installation
-
-It's easy to install and run it on your computer.
-
-```shell
-# 1. First, clone the repo
-$ git clone https://github.com/mtobeiyf/keras-flask-deploy-webapp.git
-$ cd keras-flask-deploy-webapp
-
-# 2. Install Python packages
-$ pip install -r requirements.txt
-
-# 3. Run!
-$ python app.py
-```
-
-Open http://localhost:5000 and have fun. :smiley:
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/5097752/71064959-3c34be80-213e-11ea-8e13-91800ca2d345.gif" height="480px" alt="">
-</p>
-
 ------------------
 
-## Customization
+## Dataset - [COVIDx CT](https://www.kaggle.com/hgunraj/covidxct)
 
-It's also easy to customize and include your models in this app.
+![dataset](./pictures/kaggle.png)
 
-<details>
- <summary>Details</summary>
+![bbox](./pictures/bbox.png)
 
-### Use your own model
+## Model
 
-Place your trained `.h5` file saved by `model.save()` under models directory.
+The model training file is [COVID-19.ipynb](./COVID-19.ipynb).
 
-Check the [commented code](https://github.com/mtobeiyf/keras-flask-deploy-webapp/blob/master/app.py#L37) in app.py.
+## Performance
 
-### Use other pre-trained model
+![confusion_matrix](./pictures/confusion%20matrix%20epoch%2013.png)
 
-See [Keras applications](https://keras.io/applications/) for more available models such as DenseNet, MobilNet, NASNet, etc.
+![accuracy](./pictures/mini64_lr0.0001_e20_densenet201_3_acc.jpg)
 
-Check [this section](https://github.com/mtobeiyf/keras-flask-deploy-webapp/blob/master/app.py#L26) in app.py.
-
-### UI Modification
-
-Modify files in `templates` and `static` directory.
-
-`index.html` for the UI and `main.js` for all the behaviors.
-
-</details>
-
-
-## Deployment
-
-To deploy it for public use, you need to have a public **linux server**.
-
-<details>
- <summary>Details</summary>
-  
-### Run the app
-
-Run the script and hide it in background with `tmux` or `screen`.
-```
-$ python app.py
-```
-
-You can also use gunicorn instead of gevent
-```
-$ gunicorn -b 127.0.0.1:5000 app:app
-```
-
-More deployment options, check [here](https://flask.palletsprojects.com/en/1.1.x/deploying/wsgi-standalone/)
-
-### Set up Nginx
-
-To redirect the traffic to your local app.
-Configure your Nginx `.conf` file.
-
-```
-server {
-  listen  80;
-
-  client_max_body_size 20M;
-
-  location / {
-      proxy_pass http://127.0.0.1:5000;
-  }
-}
-```
-
-</details>
-
-## Future
-
-- [ ] Support detection and segmentation models
+![loss](./pictures/mini64_lr0.0001_e20_densenet201_3_loss.jpg)
 
 ## More resources
 

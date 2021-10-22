@@ -1,9 +1,8 @@
 import os
-import sys
 import copy
 
 # Flask
-from flask import Flask, redirect, url_for, request, render_template, Response, jsonify, redirect
+from flask import Flask, request, render_template, jsonify
 from gevent.pywsgi import WSGIServer
 
 import torch
@@ -26,8 +25,8 @@ input_channel = 1
 input_size = (224, 224)
 crop_size = (340, 380)
 
-model_path = '/Users/lxy/PycharmProjects/mnist_web/densenet201_3.pth'
-weight_path = '/Users/lxy/PycharmProjects/mnist_web/densenet201_3_best_acc.pth'
+model_path = '/Users/lxy/PycharmProjects/covid_web/densenet201_3.pth'
+weight_path = '/Users/lxy/PycharmProjects/covid_web/densenet201_3_best_acc.pth'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 to_tensor = transforms.Compose([
@@ -99,9 +98,6 @@ def predict():
     if request.method == 'POST':
         # Get the image from post request
         img = base64_to_pil(request.json)
-
-        # Save the image to ./uploads
-        # img.save("./uploads/image.png")
 
         # Make prediction
         cam_img = grad_cam(img, model_cam)
