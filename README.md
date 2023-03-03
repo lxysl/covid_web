@@ -16,7 +16,7 @@
 
 ```shell
 # 1. First, clone the repo
-$ git clone git@github.com:lxy764139720/covid_web.git
+$ git clone git@github.com:lxysl/covid_web.git
 
 $ cd covid_web
 
@@ -41,7 +41,7 @@ With **[Docker](https://www.docker.com)**, you can quickly build and run the ent
 
 ```shell
 # 1. First, clone the repo
-$ git clone git@github.com:lxy764139720/covid_web.git
+$ git clone git@github.com:lxysl/covid_web.git
 $ cd covid_web
 
 # 2. Build Docker image
